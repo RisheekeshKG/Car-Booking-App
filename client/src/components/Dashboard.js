@@ -10,25 +10,28 @@ function Dashboard() {
     const [bookedTimeSlots, setBookingTimeSlots] = useState({ from: '', to: '' });
     const [Reference, setReference] = useState('');
     const [DropPickupPoint, setDropPickupPoint] = useState('');
+    const [file, setFile] = useState(null); // New state for the file
     const [error, setError] = useState(null);
     const username = localStorage.getItem('username');
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        
+        const formData = new FormData();
+        formData.append("GuestName", GuestName);
+        formData.append("GuestRole", GuestRole);
+        formData.append("bookingDate", bookingDate);
+        formData.append("from", bookedTimeSlots.from);
+        formData.append("to", bookedTimeSlots.to);
+        formData.append("Reference", Reference);
+        formData.append("DropPickupPoint", DropPickupPoint);
+        formData.append("username", username);
+        formData.append("file", file); // Append the file
+
         try {
             const response = await fetch("http://localhost:3000/api/bookings/bookcar", {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    GuestName,
-                    GuestRole,
-                    bookingDate,
-                    bookedTimeSlots,
-                    Reference,
-                    DropPickupPoint,
-                    username
-                })
+                body: formData, // Send form data with file
             });
             if (response.ok) {
                 alert("Booking successful");
@@ -39,6 +42,7 @@ function Dashboard() {
                 setBookingTimeSlots({ from: '', to: '' });
                 setReference('');
                 setDropPickupPoint('');
+                setFile(null); // Reset the file input
             } else {
                 const data = await response.json();
                 setError(data.message || "An error occurred. Please try again.");
@@ -50,8 +54,8 @@ function Dashboard() {
 
     return (
         <div className='dash1'>
-            <Navbar/>
-            <form onSubmit={handleSubmit}>
+            <Navbar />
+            <form onSubmit={handleSubmit} encType="multipart/form-data"> {/* Add encType */}
                 <h2 className='h2'>Booking </h2>
                 <hr />
                 {error && <div className="alert alert-danger">{error}</div>}
@@ -80,6 +84,10 @@ function Dashboard() {
                 <div className="mb-3">
                     <label htmlFor="DropPickupPoint" className="form-label">Drop/Pickup Point</label>
                     <input type="text" className="form-control" id="DropPickupPoint" placeholder="Place Name" value={DropPickupPoint} onChange={(e) => setDropPickupPoint(e.target.value)} required />
+                </div>
+                <div className="mb-3"> {/* New file input */}
+                    <label htmlFor="file" className="form-label">Upload PDF</label>
+                    <input type="file" className="form-control" id="file" onChange={(e) => setFile(e.target.files[0])} required />
                 </div>
                 <button type="submit" className="btn btn-dark"> Book </button>
             </form>

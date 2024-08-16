@@ -12,7 +12,9 @@ const bookingSchema = new mongoose.Schema({
     Status: { type: String, default: "Pending" },
     username: { type: String, default: "-" },
     GuestRole: { type: String },
-    DropPickupPoint: { type: String }
+    DropPickupPoint: { type: String },
+    pdfTitle: { type: String }, // New field to store the PDF title
+    pdfFileName: { type: String } // New field to store the PDF filename
 }, { timestamps: true });
 
 const BookingModel = mongoose.model('bookings', bookingSchema);

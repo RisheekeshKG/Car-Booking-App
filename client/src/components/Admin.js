@@ -18,6 +18,7 @@ function Admin() {
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data)
                     setBookings(data);
                 } else {
                     throw new Error('Failed to fetch bookings');
@@ -31,6 +32,8 @@ function Admin() {
 
         fetchBookings();
     }, []);
+
+
 
     const handleDecision = async (objectId, status) => {
         try {
@@ -47,6 +50,7 @@ function Admin() {
                     if (booking._id === objectId) {
                         return { ...booking, Status: status };
                     }
+                    console.log(booking)
                     return booking;
                 });
                 setBookings(updatedBookings);
@@ -94,6 +98,7 @@ function Admin() {
                                 <th scope="col">Booking Timings</th>
                                 <th scope="col">Guest Role</th>
                                 <th scope="col">Reference</th>
+                                <th scope="col">PDF</th> {/* Added PDF column */}
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
@@ -101,17 +106,29 @@ function Admin() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan="7">Loading...</td>
+                                    <td colSpan="8">Loading...</td> {/* Updated colspan */}
                                 </tr>
                             ) : (
                                 bookings.map(booking => (
                                     <tr key={booking._id}>
-                                    <td>{booking.GuestName}</td>
-                                    <td>{booking.bookingDate.slice(0,10)}</td>
-                                    <td>{`${booking.bookedTimeSlots.from} - ${booking.bookedTimeSlots.to}`}</td>
-                                    <td>{booking.GuestRole}</td>
-                                    <td>{booking.Reference}</td>
-                                    <td>{booking.Status}</td>
+                                        <td>{booking.GuestName}</td>
+                                        <td>{booking.bookingDate ? booking.bookingDate.slice(0, 10) : 'N/A'}</td>
+                                        <td>
+                                            {booking.bookedTimeSlots && booking.bookedTimeSlots.from && booking.bookedTimeSlots.to
+                                                ? `${booking.bookedTimeSlots.from} - ${booking.bookedTimeSlots.to}`
+                                                : 'N/A'}
+                                        </td>
+                                        <td>{booking.GuestRole || 'N/A'}</td>
+                                        <td>{booking.Reference || 'N/A'}</td>
+                                        <td>
+                                            {booking.pdfFileName ? (
+                                                
+                                                <a href={`http://localhost:3000/api/admin/files/${booking.pdfFileName}`} target="_blank" rel="noopener noreferrer">View PDF</a>
+                                            ) : (
+                                                'No PDF'
+                                            )}
+                                        </td>
+                                        <td>{booking.Status || 'N/A'}</td>
                                         <td>
                                             <button className="btn btn-accept btn-sm" onClick={() => handleDecision(booking._id, 'Accepted')}>Accept</button>
                                             <button className="btn btn-reject btn-sm" onClick={() => handleDecision(booking._id, 'Rejected')}>Reject</button>

@@ -31,6 +31,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 // Routes
 app.use('/api/users', require('./routes/usersRoutes'));
 app.use('/api/bookings', require('./routes/bookingsRoutes'));
