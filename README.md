@@ -1,6 +1,6 @@
 Steps to Install the Application :
 
-1. Clone  the repository by clicking on the <code> button and copy the link
+1. Clone  the repository by clicking on the {code} button and copy the link
 2. type ``git clone <URL>`` in cmd or power shell and paste the copied link
 
 
