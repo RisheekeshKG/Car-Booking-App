@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const Booking = require("../models/bookingModel");
+const dot = require("dotenv").config();
+const twilio = require("twilio");
+
+console.log(dot)
 
 router.use(express.json());
 router.use("/files", express.static("files"));
@@ -17,6 +21,11 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+// Twilio configuration
+const accountSid = dot.parsed.ACCOUNTSID; // Your Account SID from www.twilio.com/console
+const authToken = dot.parsed.AUTHTOKEN; // Your Auth Token from www.twilio.com/console
+const twilioClient = new twilio(accountSid, authToken);
 
 router.post("/bookcar", upload.single("file"), async (req, res) => {
   try {
@@ -48,6 +57,15 @@ router.post("/bookcar", upload.single("file"), async (req, res) => {
     });
 
     await newBooking.save();
+
+    // Send SMS using Twilio
+    const message = await twilioClient.messages.create({
+      body: `Booking Request Arrived \n Name : ${req.body.GuestName}.\nBooking Reference: ${req.body.Reference}\nPickup: ${req.body.PickupPoint}\nDrop: ${req.body.DropPoint}\nTotal Hours: ${totalHours}`,
+      to: dot.parsed.PHONENUMBER , // the phone number of the booker
+      from: dot.parsed.TWILIONUMBER, // your Twilio number
+    });
+
+    console.log("SMS sent: ", message.sid);
     res.status(201).send(newBooking);
   } catch (error) {
     console.error("Booking Error: ", error);
