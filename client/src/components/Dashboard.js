@@ -9,7 +9,8 @@ function Dashboard() {
     const [bookingDate, setBookingDate] = useState('');
     const [bookedTimeSlots, setBookingTimeSlots] = useState({ from: '', to: '' });
     const [Reference, setReference] = useState('');
-    const [DropPickupPoint, setDropPickupPoint] = useState('');
+    const [PickupPoint, setPickupPoint] = useState('');
+    const [DropPoint, setDropPoint] = useState('');
     const [file, setFile] = useState(null); // New state for the file
     const [error, setError] = useState(null);
     const username = localStorage.getItem('username');
@@ -24,7 +25,8 @@ function Dashboard() {
         formData.append("from", bookedTimeSlots.from);
         formData.append("to", bookedTimeSlots.to);
         formData.append("Reference", Reference);
-        formData.append("DropPickupPoint", DropPickupPoint);
+        formData.append("PickupPoint",PickupPoint);
+        formData.append("DropPoint", DropPoint);
         formData.append("username", username);
         formData.append("file", file); // Append the file
 
@@ -41,7 +43,8 @@ function Dashboard() {
                 setBookingDate('');
                 setBookingTimeSlots({ from: '', to: '' });
                 setReference('');
-                setDropPickupPoint('');
+                setPickupPoint('');
+                setDropPoint('');
                 setFile(null); // Reset the file input
             } else {
                 const data = await response.json();
@@ -82,8 +85,12 @@ function Dashboard() {
                     <input type="text" className="form-control" id="Reference" placeholder="Reference" value={Reference} onChange={(e) => setReference(e.target.value)} required />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="DropPickupPoint" className="form-label">Drop/Pickup Point</label>
-                    <input type="text" className="form-control" id="DropPickupPoint" placeholder="Place Name" value={DropPickupPoint} onChange={(e) => setDropPickupPoint(e.target.value)} required />
+                    <label htmlFor="DropPickupPoint" className="form-label">Pickup Point</label>
+                    <input type="text" className="form-control" id="DropPickupPoint" placeholder="Place Name" value={PickupPoint} onChange={(e) => setPickupPoint(e.target.value)} required />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="DropPickupPoint" className="form-label">Drop Point</label>
+                    <input type="text" className="form-control" id="DropPickupPoint" placeholder="Place Name" value={DropPoint} onChange={(e) => setDropPoint(e.target.value)} required />
                 </div>
                 <div className="mb-3"> {/* New file input */}
                     <label htmlFor="file" className="form-label">Upload PDF</label>

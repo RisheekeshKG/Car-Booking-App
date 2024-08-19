@@ -13,7 +13,8 @@ const bookingSchema = new mongoose.Schema(
     Status: { type: String, default: "Pending" },
     username: { type: String, default: "-" },
     GuestRole: { type: String },
-    DropPickupPoint: { type: String },
+    PickupPoint: { type: String },
+    DropPoint: { type: String },
     pdfTitle: { type: String }, // Field to store the PDF title
     pdfFileName: { type: String }, // Field to store the PDF filename
     driverAlloted: { type: String, default: "Pending" }, // New field for driver allotted
