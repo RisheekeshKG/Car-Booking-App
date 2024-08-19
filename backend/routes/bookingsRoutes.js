@@ -42,6 +42,8 @@ router.post("/bookcar", upload.single("file"), async (req, res) => {
       DropPickupPoint: req.body.DropPickupPoint,
       pdfTitle: req.body.pdfTitle,
       pdfFileName: req.file.filename,
+      driverAlloted: "Pending",
+      driverNumber: "-"
     });
 
     await newBooking.save();
