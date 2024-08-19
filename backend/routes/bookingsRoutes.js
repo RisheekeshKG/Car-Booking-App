@@ -4,35 +4,44 @@ const multer = require("multer");
 const Booking = require("../models/bookingModel");
 
 router.use(express.json());
-router.use("/files", express.static("files")); 
+router.use("/files", express.static("files"));
 
-// Set up multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./files"); // Save files in the 'files' directory
+    cb(null, "./files");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + file.originalname;
-    cb(null, uniqueSuffix); // Create a unique filename
+    cb(null, uniqueSuffix);
   },
 });
 
 const upload = multer({ storage: storage });
 
-// Route to handle booking and PDF upload
 router.post("/bookcar", upload.single("file"), async (req, res) => {
   try {
+    const bookedTimeSlots = {
+      from: req.body.from,
+      to: req.body.to,
+    };
+
+    const totalHours = calculateTotalHours(
+      bookedTimeSlots.from,
+      bookedTimeSlots.to
+    );
+
     const newBooking = new Booking({
       GuestName: req.body.GuestName,
-      bookedTimeSlots: req.body.bookedTimeSlots,
-      totalHours: req.body.totalHours,
+      bookingDate: req.body.bookingDate,
+      bookedTimeSlots: bookedTimeSlots,
+      totalHours: totalHours,
       Reference: req.body.Reference,
-      Status: req.body.Status,
+      Status: "Pending",
       username: req.body.username,
       GuestRole: req.body.GuestRole,
       DropPickupPoint: req.body.DropPickupPoint,
-      pdfTitle: req.body.title, // Store PDF title
-      pdfFileName: req.file.filename // Store PDF filename
+      pdfTitle: req.body.pdfTitle,
+      pdfFileName: req.file.filename,
     });
 
     await newBooking.save();
@@ -43,7 +52,6 @@ router.post("/bookcar", upload.single("file"), async (req, res) => {
   }
 });
 
-// Route to handle fetching booking history
 router.get("/history", async (req, res) => {
   try {
     const history = await Booking.find({ username: req.query.user });
@@ -53,5 +61,12 @@ router.get("/history", async (req, res) => {
     res.status(400).send("History can't be fetched");
   }
 });
+
+function calculateTotalHours(from, to) {
+  const fromTime = new Date(`1970-01-01T${from}:00`);
+  const toTime = new Date(`1970-01-01T${to}:00`);
+  const difference = (toTime - fromTime) / 1000 / 60 / 60;
+  return difference > 0 ? difference : null;
+}
 
 module.exports = router;

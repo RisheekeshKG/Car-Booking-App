@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import Navbar from "./Navbar";
 
 function History() {
@@ -61,7 +60,9 @@ function History() {
                                 <tr key={index} className="table-light">
                                     <td>{item.GuestName}</td>
                                     <td>{item.bookingDate.slice(0,10)}</td>
-                                    <td>{`${item.bookedTimeSlots.from} - ${item.bookedTimeSlots.to}`}</td>
+                                    <td>
+                                        {item.bookedTimeSlots ? `${item.bookedTimeSlots.from} - ${item.bookedTimeSlots.to}` : 'N/A'}
+                                    </td>
                                     <td>{item.GuestRole}</td>
                                     <td>{item.Reference}</td>
                                     <td>{item.Status}</td>
