@@ -249,7 +249,7 @@ function Admin() {
                             handleDecision(booking._id, "Accepted")
                           }
                         >
-                          Save & Accept
+                          Accept
                         </button>
                       ) : (
                         <>
@@ -257,7 +257,7 @@ function Admin() {
                             className="btn btn-accept btn-sm"
                             onClick={() => handleEdit(booking._id)}
                           >
-                            Assign & Accept
+                            Accept
                           </button>
                           <button
                             className="btn btn-reject btn-sm"
