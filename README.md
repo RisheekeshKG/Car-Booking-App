@@ -15,9 +15,11 @@
 
 
 # Starting The Program :
- -> You have to run front-end and backend separately in different terminals
- -> make sure u did the installation steps correct 
- -> rest all the terminals u have worked on with `` ctrl + c``
+ - You have to run front-end and backend separately in different terminals
+ 
+ - make sure u did the installation steps correct 
+ 
+ - rest all the terminals u have worked on with `` ctrl + c``
 
 ### Starting Front-End:
 
